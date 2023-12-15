@@ -3,6 +3,9 @@ let mapSize = {
   Y: 1000
 }
 
+
+
+
 walls = [[]]
 
 function getCollisions(startX, startY, endX, endY) {
@@ -55,7 +58,7 @@ function isLineClear(startX, startY, endX, endY) {
   if(startX==endX&&startY==endY){
     return true
   }
-  
+
   lineCollisions = getCollisions(startX, startY, endX, endY)
 
   for (let tile = 0; tile < lineCollisions.length; tile++) {
@@ -76,6 +79,10 @@ function isLineClear(startX, startY, endX, endY) {
 }
 
 
+function hasTakenConnection(startX, startY, endX, endY) {
+  return Math.sqrt((endX-startX)**2 + (endY-startY)**2)>1
+
+}
 
 
 
@@ -93,7 +100,7 @@ function optimizedPath(startingX, startingY, destinationX, destinationY){
   preIterator = 0
   iterator = 1
 
-  
+
   while(iterator < pathToCheck.length){
 
 
@@ -107,8 +114,8 @@ function optimizedPath(startingX, startingY, destinationX, destinationY){
 
     if(iterator<pathToCheck.length-1){
 
-      
-      if(hasConnections(pathToCheck[iterator][0],pathToCheck[iterator][1])&&isClear){
+
+      if(hasConnections(pathToCheck[iterator][0],pathToCheck[iterator][1])&&isClear&&hasTakenConnection(pathToCheck[iterator][0],pathToCheck[iterator][1],pathToCheck[iterator+1][0],pathToCheck[iterator+1][1])){
         toReturn.push([pathToCheck[preIterator],pathToCheck[iterator]])
         preIterator = iterator + 1
         iterator = preIterator
@@ -129,10 +136,10 @@ function optimizedPath(startingX, startingY, destinationX, destinationY){
         return toReturn
       }
     }
-    
 
-    
-    
+
+
+
     if(isClear){
       //line works
       iterator++
@@ -227,6 +234,22 @@ function addConnection(fromX,fromY,toX,toY){
   return
 }
 
+function removeConnection(tileX,tileY){
+  if(hasConnections(tileX,tileY)){
+    connections[tileX][tileY] = false
+  }
+  return
+}
+
+function clearWalls(){
+  walls = [[]]
+  return
+}
+
+function clearConnections(){
+  connections = [[]]
+  return
+}
 
 
 function hasConnections(tileX,tileY){
