@@ -43,6 +43,8 @@ function getCollisions(startX, startY, endX, endY) {
   return results
 }
 
+
+
 previousCollisionOffset = [
   [[2,1],[1],[0,1]], //Left
   [[2],null,[0]], //Center
@@ -73,11 +75,15 @@ function isLineClear(startX, startY, endX, endY) {
   return true
 }
 
+
+
+
+
 function optimizedPath(startingX, startingY, destinationX, destinationY){
   pathToCheck = pathFind(startingX,startingY,destinationX,destinationY)
 
   if(!pathToCheck){
-    return false //destination is unreachable
+    return false //destionation is unreachable
   }
 
   pathToCheck.unshift([startingX,startingY])
@@ -123,6 +129,10 @@ function optimizedPath(startingX, startingY, destinationX, destinationY){
         return toReturn
       }
     }
+    
+
+    
+    
     if(isClear){
       //line works
       iterator++
@@ -131,12 +141,16 @@ function optimizedPath(startingX, startingY, destinationX, destinationY){
       toReturn.push([pathToCheck[preIterator],pathToCheck[iterator-1]])
       preIterator = iterator-1
     }
+
   }
   return toReturn
 }
 
+
+
+
 directionChange = { Top: 0, Right: 1, Bottom: 2, Left: 3, top: 0, right: 1, bottom: 2, left: 3 }
-function wallCordinates(tileX, tileY, direction) {
+function wallCordinates(tileX, tileY, direction) { //Extremely time efficent, much better than if statements
   if (typeof direction == "string") {
     direction = directionChange[direction]
   }
@@ -153,6 +167,8 @@ function wallCordinates(tileX, tileY, direction) {
   return
 }
 
+
+
 function addWall(tileX, tileY, direction) {
   wallCords = wallCordinates(tileX,tileY,direction)
   if(walls[wallCords[0]]){
@@ -167,6 +183,8 @@ function addWall(tileX, tileY, direction) {
   return
 }
 
+
+
 function removeWall(tileX, tileY, direction) {
   if(checkIfWallExists(tileX,tileY,direction)){
     wallCords = wallCordinates(tileX,tileY,direction)
@@ -174,6 +192,8 @@ function removeWall(tileX, tileY, direction) {
   }
   return
 }
+
+
 
 function checkIfWallExists(tileX, tileY, direction){
   wallCords = wallCordinates(tileX,tileY,direction)
@@ -183,11 +203,15 @@ function checkIfWallExists(tileX, tileY, direction){
   return false
 }
 
+
+
 function isOutOfBounds(tileX, tileY){
   return tileX < 0 || tileX > mapSize.X || tileY < 0 || tileY > mapSize.Y
 }
 
 connections = []
+
+
 
 function addConnection(fromX,fromY,toX,toY){
   if(connections[fromX]){
@@ -202,6 +226,8 @@ function addConnection(fromX,fromY,toX,toY){
   connections[fromX][fromY] = [[toX,toY]]
   return
 }
+
+
 
 function hasConnections(tileX,tileY){
   if(connections[tileX]){
@@ -281,6 +307,7 @@ function pathFind(startingX, startingY, destinationX, destinationY){
             expanding.push(connections[expanding[expand][0]][expanding[expand][1]][c])
           }
         }
+
 
         if(isOutOfBounds(newTileCordinates[0],newTileCordinates[1])){
           continue // skip iteration if out of bounds
