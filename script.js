@@ -9,41 +9,77 @@ let mapSize = {
 walls = [[]]
 
 function getCollisions(startX, startY, endX, endY) {
-  results = [];
-  dx = Math.abs(endX - startX)
-  dy = Math.abs(endY - startY)
-  sx = (startX < endX) ? 1 : -1;
-  sy = (startY < endY) ? 1 : -1;
-  err = dx - dy
-  startX2 = startX
-  startY2 = startY
-  while (true) {
-    results.push([startX,startY])
-    if (startX == endX && startY == endY) {
-      break;
+
+  slope = ((endY - startY)/(endX - startX))
+  yIntercept = startY - slope*startX
+  equation = (x) => x*slope + yIntercept
+
+
+  collisions = []
+  if(endX>startX){
+    //right
+    if(slope>=0){
+      for(let x = startX; x<=endX; x++){
+        sideOffset = 0.5
+        startingOffset = 0
+        if(x==startX){
+          startingOffset = 0.5
+        }
+        endingOffset = 0
+        if(x==endX){
+          endingOffset = -0.5
+        }
+        for(let y = Math.floor(equation(x-sideOffset+startingOffset)+0.5);y<=Math.floor(equation(x+sideOffset+endingOffset)+0.5);y++){
+          collisions.push([x,Math.round(y)])
+        }
+      }
+    }else{
+
+
+
+      for(let x = startX; x<=endX; x++){
+        sideOffset = 0.5
+        startingOffset = 0
+        if(x==startX){
+          startingOffset = 0.5
+        }
+        endingOffset = 0
+        if(x==endX){
+          endingOffset = -0.5
+        }
+        for(let y = Math.ceil(equation(x-sideOffset+startingOffset)-0.5);y>=Math.ceil(equation(x+sideOffset+endingOffset)-0.5);y--){
+          collisions.push([x,Math.round(y)])
+        }
+      }
+
     }
-    err2 = 2 * err
-    if (err2 > -dy) {
-      err -= dy;
-      startX += sx
+
+
+  }else if(endX<startX){
+    //left
+    collisions = getCollisions(endX,endY,startX,startY)
+    collisions.reverse()
+  }else{
+    //center
+    if(endY>startY){
+      //up
+
+      for(let y = startY; y<=endY; y++){
+        collisions.push([startX,y])
+      }
+
+    }else{
+      //down
+
+      for(let y = startY; y>=endY; y--){
+        collisions.push([startX,y])
+      }
+
     }
-    if (err2 < dx) {
-      err += dx;
-      startY += sy
-    }
+
   }
-  steps = Math.max(dx, dy);
-  changeOffset = 0
-  for (let i = 0; i <= steps; i++) {
-    t = i / steps;
-    currentX = Math.round(startX2 + t * (endX - startX2))
-    currentY = Math.round(startY2 + t * (endY - startY2))
-    if(!(results[i+changeOffset][0] == currentX && results[i+changeOffset][1] == currentY)){
-      results.splice(i+changeOffset+1,0,[currentX, currentY])
-      changeOffset++
-    }
-  }
-  return results
+  //collisions.shift()
+  return collisions
 }
 
 
