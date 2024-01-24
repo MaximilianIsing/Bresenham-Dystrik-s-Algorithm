@@ -134,7 +134,7 @@ function optimizedPath(startingX, startingY, destinationX, destinationY){
   toReturn = []
 
   preIterator = 0
-  iterator = 1
+  iterator = 0
 
 
   while(iterator < pathToCheck.length){
